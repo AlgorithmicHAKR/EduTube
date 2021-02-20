@@ -4,23 +4,38 @@
          * See instructions for running APIs Explorer code samples locally:
          * https://developers.google.com/explorer-help/guides/code_samples#javascript
          */
+       
         function authenticate() {
             if(gapi.auth2!=undefined){
+          //    console.log(gapi.client);
+              
             gapi.auth2.getAuthInstance()
                 .signIn({scope: "https://www.googleapis.com/auth/youtube.readonly"})
-                .then(function() { console.log("Sign-in successful"); },
-                      function(err) { console.error("Error signing in", err); }).then(()=>{
+                .then(function(data) {
+                  console.log("***********************")
+                  console.log("Sign-in successful");return data; },
+                      function(err) { console.error("Error signing in", err); }).then((data)=>{
+                        console.log(gapi.client);
+                        localStorage.setItem('gmailid',data.Es.kt);
+                      //  console.log(localStorage.getItem('gmailid'))
                           loadClient();
                       })
           
                     }}
           function loadClient() {
+            localStorage.setItem('apikey',"AIzaSyAVxccr4fSWZQi3HsnfYuKwuKfHJnYKDXo");
             gapi.client.setApiKey("AIzaSyAVxccr4fSWZQi3HsnfYuKwuKfHJnYKDXo");
             return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
-                .then(function() { console.log("GAPI client loaded for API"); },
+                .then(function() { console.log("GAPI client loaded for API");
+              },
                       function(err) { console.error("Error loading GAPI client for API", err); });
           }
           // Make sure the client is loaded and sign-in is complete before calling this method.
+        //  console.log(gapi.client)
+    // if(localStorage.getItem('apikey')!=undefined){
+    //   gapi.client.setApiKey(localStorage.getItem('apikey'));
+    //   gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
+    //   }
     function search(){
     //   return gapi.client.youtube.search.list({
     //     "part": [
@@ -84,8 +99,29 @@
              })
       }}
       gapi.load("client:auth2", function() {
-        gapi.auth2.init({client_id: "104520586886-25kc7v84ugpar8tgi7f4u8562kdat4ai.apps.googleusercontent.com"});
-      });
+        
+        // console.log(gapi.auth2);
+        gapi.auth2.init({client_id: "104520586886-25kc7v84ugpar8tgi7f4u8562kdat4ai.apps.googleusercontent.com"})
+        .then(()=>{
+          var temp1=JSON.stringify(gapi.auth2, function(key, value) {
+            if (typeof value === 'function') {
+              return value.toString();
+            } else {
+              return value;
+            }
+          });
+          //  console.log(temp1)
+          localStorage.setItem('gapi.auth2',temp1);
+          // console.log("HIHIH")
+        //  console.log(gapi.client)
+          //  console.log(JSON.parse(localStorage.getItem('gapi.auth2')))
+          // console.log(gapi.auth2);
+            if(localStorage.getItem('apikey')!=undefined){
+      gapi.client.setApiKey(localStorage.getItem('apikey'));
+      gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
+      }
+        })
+      })
     //  console.log(document.getElementById("login")+"HI");   
     //  execute.onclick=execute()
     document.getElementById("execute").addEventListener("click",execute)

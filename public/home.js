@@ -1,6 +1,6 @@
-const username=localStorage.get('username')
+const gmailId=localStorage.get('gmailId')
 var ul=document.getElementById("ul");
-fetch(`./api/subcribes?username=${username}`).then((channels)=>{
+fetch(`./api/subcribes?gmailId=${gmailId}`).then((channels)=>{
     channels.forEach(channelId=>{
          getvideos(channelId)
      })
@@ -18,7 +18,7 @@ function getvideos(channelId){
                     return new Promise((resolve,reject)=>{
                         console.log("Response", response);
                         var playlistId=response.result.items[0].contentDetails.relatedPlaylists.uploads;
-                      //  console.log(playlistId);
+                    
                         resolve(playlistId);
                     })  
                   },
@@ -47,3 +47,14 @@ function getvideos(channelId){
              })
       }
 }
+
+
+gapi.load("client:auth2", function() {
+  gapi.auth2.init({client_id: "104520586886-25kc7v84ugpar8tgi7f4u8562kdat4ai.apps.googleusercontent.com"})
+  .then(()=>{
+      if(localStorage.getItem('apikey')!=undefined){
+          gapi.client.setApiKey(localStorage.getItem('apikey'));
+          gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
+      }
+  })
+})
